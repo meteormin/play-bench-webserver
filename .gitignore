@@ -1,0 +1,61 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Rust (benchmark-tool)
+/benchmark-tool/target/
+
+# Go (go-gin)
+/go-gin/vendor/
+/go-gin/go.sum
+
+# Java/Gradle (java-spring)
+/java-spring/.gradle/
+/java-spring/build/
+/java-spring/out/
+/java-spring/bin/
+/java-spring/.settings/
+/java-spring/.project
+/java-spring/.classpath
+
+# Node.js (node-express)
+/node-express/node_modules/
+/node-express/npm-debug.log*
+/node-express/yarn-debug.log*
+/node-express/yarn-error.log*
+/node-express/.pnp/
+/node-express/.pnp.js
+
+# PHP (php-laravel)
+/php-laravel/vendor/
+/php-laravel/.env
+/php-laravel/.env.backup
+/php-laravel/.env.production
+/php-laravel/composer.lock
+
+# Python (python-fastapi)
+/python-fastapi/__pycache__/
+/python-fastapi/*.py[cod]
+/python-fastapi/*$py.class
+/python-fastapi/.venv
+/python-fastapi/venv/
+/python-fastapi/env/
+/python-fastapi/.pytest_cache/
+/python-fastapi/.coverage
+/python-fastapi/htmlcov/
+
+# Docker
+.docker/
