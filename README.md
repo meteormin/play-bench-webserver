@@ -7,7 +7,7 @@
 - **Node.js**: Express
 - **Python**: FastAPI
 - **Java**: Spring Boot
-- **PHP**: Minimal Router (Laravel-like)
+- **PHP**: Laravel 11 (API)
 
 ## 기능
 각 API는 다음과 같은 동일한 RESTful 엔드포인트를 구현합니다.
