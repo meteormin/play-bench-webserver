@@ -1,0 +1,6 @@
+Service,RPS,CPU %,Memory,Img Size
+go-gin,164.26,0.00%,9.27MiB,56MB
+node-express,151.42,0.02%,26.75MiB,239MB
+python-fastapi,139.06,0.32%,47.87MiB,346MB
+java-spring,139.90,0.39%,152.6MiB,324MB
+php-laravel,114.71,5.84%,52.15MiB,252MB

@@ -1,6 +1,5 @@
 use std::process::Command;
 use std::time::{Duration, Instant};
-use std::collections::HashMap;
 use std::thread;
 
 const SERVICES: &[(&str, u16)] = &[
@@ -12,9 +11,31 @@ const SERVICES: &[(&str, u16)] = &[
 ];
 
 fn main() {
+    let mut context_path = String::from(".");
+
+    let mut args = std::env::args().skip(1);
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "--path" | "-p" => {
+                if let Some(path) = args.next() {
+                    context_path = path;
+                } else {
+                    eprintln!("Error: --path requires a value");
+                    std::process::exit(1);
+                }
+            }
+            _ => {
+                eprintln!("Unknown argument: {}", arg);
+                std::process::exit(1);
+            }
+        }
+    }
+
+    let docker_compose_file = format!("{}/docker-compose.yml", context_path);
+
     println!("--- Starting Benchmark Build ---");
     let build_status = Command::new("docker")
-        .args(&["compose", "-f", "../docker-compose.yml", "build"])
+        .args(&["compose", "-f", &docker_compose_file, "build"])
         .status()
         .expect("Failed to build images");
 
@@ -30,7 +51,7 @@ fn main() {
         
         // Start service
         Command::new("docker")
-            .args(&["compose", "-f", "../docker-compose.yml", "up", "-d", name])
+            .args(&["compose", "-f", &docker_compose_file, "up", "-d", name])
             .status()
             .expect("Failed to start service");
 
@@ -75,14 +96,31 @@ fn main() {
 
         // Stop service
         Command::new("docker")
-            .args(&["compose", "-f", "../docker-compose.yml", "stop", name])
+            .args(&["compose", "-f", &docker_compose_file, "stop", name])
             .status()
             .expect("Failed to stop service");
     }
 
     println!("\n\n{:<15} | {:<10} | {:<10} | {:<15} | {:<10}", "Service", "RPS", "CPU %", "Memory", "Img Size");
     println!("{}", "-".repeat(70));
-    for (name, rps, cpu, mem, size) in results {
+    for (name, rps, cpu, mem, size) in &results {
         println!("{:<15} | {:<10.2} | {:<10} | {:<15} | {:<10}", name, rps, cpu, mem, size);
     }
+
+    // Write to CSV
+    let reports_dir = format!("{}/reports", context_path);
+    std::fs::create_dir_all(&reports_dir).expect("Failed to create reports directory");
+    let timestamp_output = Command::new("date")
+        .args(&["+%Y%m%d_%H%M%S"])
+        .output()
+        .expect("Failed to get date");
+    let timestamp = String::from_utf8_lossy(&timestamp_output.stdout).trim().to_string();
+    
+    let csv_file_path = format!("{}/benchmark_{}.csv", reports_dir, timestamp);
+    let mut csv_content = String::from("Service,RPS,CPU %,Memory,Img Size\n");
+    for (name, rps, cpu, mem, size) in results {
+        csv_content.push_str(&format!("{},{:.2},{},{},{}\n", name, rps, cpu, mem, size));
+    }
+    std::fs::write(&csv_file_path, csv_content).expect("Failed to write CSV file");
+    println!("\nResults saved to {}", csv_file_path);
 }

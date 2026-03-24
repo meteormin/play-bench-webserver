@@ -68,3 +68,6 @@ Thumbs.db
 
 # Docker
 .docker/
+
+# Binary
+bin/
